@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MobileSnap - Dokumentasi & Arsitektur</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-glow: rgba(99, 102, 241, 0.15);
+            --secondary: #d946ef;
+            --secondary-glow: rgba(217, 70, 239, 0.15);
+            --accent: #10b981;
+            --accent-glow: rgba(16, 185, 129, 0.15);
+            --warning: #f59e0b;
+            --warning-glow: rgba(245, 158, 11, 0.15);
+            --bg-dark: #090a0f;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --border-card: rgba(255, 255, 255, 0.08);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(217, 70, 239, 0.05) 0%, transparent 40%);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090a0f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+
+        header {
+            position: relative;
+            padding: 5rem 2rem 3rem 2rem;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .header-glow {
+            position: absolute;
+            top: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+            filter: blur(40px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 30%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.03em;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 2rem auto;
+            font-weight: 300;
+        }
+
+        .badge-container {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-card);
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .badge-accent {
+            color: var(--accent);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(12px);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(99, 102, 241, 0.25);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: #fff;
+        }
+
+        h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem 0;
+            color: #fff;
+            border-left: 3px solid var(--primary);
+            padding-left: 0.5rem;
+        }
+
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Architecture Steps Visual */
+        .arch-flow {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 820px) {
+            .arch-flow {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .arch-node {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .arch-node:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .node-num {
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.75rem auto;
+            font-weight: bold;
+            font-size: 0.85rem;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+        }
+
+        .arch-node h4 {
+            font-family: 'Outfit', sans-serif;
+            margin-bottom: 0.4rem;
+            font-size: 1rem;
+        }
+
+        .arch-node p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        /* Device Visual Mockup */
+        .device-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .device-showcase {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .device-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .device-card:hover {
+            border-color: var(--secondary);
+            background: rgba(217, 70, 239, 0.02);
+        }
+
+        .iphone-frame {
+            width: 60px;
+            height: 120px;
+            border: 4px solid #1f2937;
+            border-radius: 12px;
+            background: #000;
+            position: relative;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 4px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .iphone-notch {
+            width: 25px;
+            height: 5px;
+            background: #1f2937;
+            border-radius: 0 0 4px 4px;
+            margin: 0 auto;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .iphone-screen {
+            flex-grow: 1;
+            background: linear-gradient(135deg, #1e1b4b 0%, #311042 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.55rem;
+            font-weight: bold;
+        }
+
+        .device-info h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 0.2rem;
+            color: #fff;
+        }
+
+        .device-info .resolution {
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .device-info p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        /* Terminal Window */
+        .terminal {
+            background: #0b0c10;
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            margin-top: 1rem;
+        }
+
+        .terminal-header {
+            background: #16171d;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-card);
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #eab308; }
+        .dot-green { background: #22c55e; }
+
+        .terminal-title {
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+        }
+
+        .terminal-body {
+            padding: 1.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            color: #d1d5db;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .terminal-line {
+            margin-bottom: 0.4rem;
+        }
+
+        .terminal-prompt {
+            color: var(--primary-light);
+            margin-right: 0.5rem;
+            user-select: none;
+        }
+
+        .terminal-comment {
+            color: #6b7280;
+            user-select: none;
+        }
+
+        /* Copy Button */
+        .btn-copy {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-card);
+            color: var(--text-muted);
+            padding: 0.35rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-copy:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary-light);
+        }
+
+        /* Command Builder */
+        .builder-container {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .form-control {
+            width: 100%;
+            background: #111318;
+            border: 1px solid var(--border-card);
+            border-radius: 6px;
+            padding: 0.6rem 0.8rem;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .builder-output {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #090a0e;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .builder-cmd {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            color: #f3f4f6;
+            word-break: break-all;
+        }
+
+        .btn-action-copy {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .btn-action-copy:hover {
+            background: var(--primary-light);
+        }
+
+        /* Warnings & Alert boxes */
+        .alert-box {
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            gap: 1rem;
+            border: 1px solid transparent;
+        }
+
+        .alert-warning {
+            background: var(--warning-glow);
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .alert-text h5 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            color: #fff;
+            margin-bottom: 0.2rem;
+        }
+
+        .alert-text p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Table */
+        .option-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .option-table th, .option-table td {
+            padding: 0.8rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-card);
+        }
+
+        .option-table th {
+            background: rgba(255, 255, 255, 0.02);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .option-table tr:hover td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        .param-tag {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-light);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-card);
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-glow"></div>
+        <div class="container">
+            <h1>MobileSnap 📸</h1>
+            <p class="tagline">Otomasi Pixel-Precise App Store & Play Store Screenshots dari Server Lokal secara Dual-Vendor.</p>
+            
+            <div class="badge-container">
+                <div class="badge">
+                    <span>Python 3.8+</span>
+                </div>
+                <div class="badge">
+                    <span>Playwright Async</span>
+                </div>
+                <div class="badge badge-accent">
+                    <span>iOS & Android</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Arsitektur Utama -->
+        <section class="glass-card">
+            <h2>🏗️ Arsitektur Aliran Kerja</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">MobileSnap dibangun menggunakan <strong>Typer</strong> untuk antarmuka CLI yang kaya, dan <strong>Playwright Async API</strong> untuk mengontrol Chromium secara berurutan pada berbagai dimensi.</p>
+            
+            <div class="arch-flow">
+                <div class="arch-node">
+                    <div class="node-num">1</div>
+                    <h4>CLI Parser</h4>
+                    <p>Membaca parameter URL, rute (paths), platform target, dan folder keluaran.</p>
+                </div>
+                <div class="arch-node">
+                    <div class="node-num">2</div>
+                    <h4>Browser Engine</h4>
+                    <p>Inisiasi Chromium secara terisolasi dan asinkronus.</p>
+                </div>
+                <div class="arch-node">
+                    <div class="node-num">3</div>
+                    <h4>Viewport Emulation</h4>
+                    <p>Meniru dimensi layar Retina (iOS) & Android secara dinamis.</p>
+                </div>
+                <div class="arch-node">
+                    <div class="node-num">4</div>
+                    <h4>Hydration Check</h4>
+                    <p>Menunggu aktivitas jaringan idle agar rendering JavaScript selesai.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Target Dimensi -->
+        <section class="glass-card">
+            <h2>📱 Dimensi Layar Target (Wajib Store)</h2>
+            
+            <h3>🍎 iOS (Apple App Store)</h3>
+            <div class="device-showcase">
+                <div class="device-card">
+                    <div class="iphone-frame">
+                        <div class="iphone-notch"></div>
+                        <div class="iphone-screen">6.7"</div>
+                    </div>
+                    <div class="device-info">
+                        <h4>iPhone 6.7" Display</h4>
+                        <div class="resolution">1290 x 2796 pixels</div>
+                        <p>Digunakan untuk jajaran iPhone Max/Pro Max terbaru.</p>
+                        <p style="margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">Berkas: 6.7_inch_[path].png</p>
+                    </div>
+                </div>
+
+                <div class="device-card">
+                    <div class="iphone-frame">
+                        <div class="iphone-notch"></div>
+                        <div class="iphone-screen">6.5"</div>
+                    </div>
+                    <div class="device-info">
+                        <h4>iPhone 6.5" Display</h4>
+                        <div class="resolution">1242 x 2688 pixels</div>
+                        <p>Digunakan untuk seri iPhone Xs Max / 11 Pro Max.</p>
+                        <p style="margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">Berkas: 6.5_inch_[path].png</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem;">🤖 Android (Google Play Store)</h3>
+            <div class="device-showcase">
+                <div class="device-card">
+                    <div class="iphone-frame" style="border-radius: 8px;">
+                        <!-- Android style frame (no notch) -->
+                        <div class="iphone-screen">Android</div>
+                    </div>
+                    <div class="device-info">
+                        <h4>Android Phone</h4>
+                        <div class="resolution">1080 x 2400 pixels</div>
+                        <p>Rasio aspek modern 20:9 untuk Google Play Phone screenshots.</p>
+                        <p style="margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">Berkas: android_phone_[path].png</p>
+                    </div>
+                </div>
+
+                <div class="device-card">
+                    <div class="iphone-frame" style="width: 100px; height: 70px; border-radius: 8px;">
+                        <!-- Tablet style landscape/wide -->
+                        <div class="iphone-screen">Tablet</div>
+                    </div>
+                    <div class="device-info">
+                        <h4>Android Tablet (10")</h4>
+                        <div class="resolution">1600 x 2560 pixels</div>
+                        <p>Dimensi tablet standar untuk kebutuhan rilis Google Play Tablet.</p>
+                        <p style="margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">Berkas: android_tablet_[path].png</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cara Instalasi -->
+        <section class="glass-card">
+            <h2>🚀 Instalasi & Penyiapan</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">Lakukan instalasi paket lokal dalam mode editable untuk memetakan perintah CLI secara global.</p>
+            
+            <div class="terminal">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <div class="dot dot-red"></div>
+                        <div class="dot dot-yellow"></div>
+                        <div class="dot dot-green"></div>
+                    </div>
+                    <div class="terminal-title">PowerShell - Setup</div>
+                </div>
+                <div class="terminal-body">
+                    <button class="btn-copy" onclick="copyText('setup-cmds')">Copy</button>
+                    <pre id="setup-cmds" style="font-family: inherit;">
+<span class="terminal-comment"># 1. Masuk ke direktori project MobileSnap kemudian install paket lokal</span>
+<span class="terminal-prompt">PS></span>pip install -e .
+
+<span class="terminal-comment"># 2. Instal driver browser Chromium Playwright</span>
+<span class="terminal-prompt">PS></span>playwright install chromium</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interaktif Command Builder -->
+        <section class="glass-card">
+            <h2>⚡ CLI Command Builder (Dual-Vendor)</h2>
+            <p style="color: var(--text-muted);">Gunakan builder interaktif ini untuk membuat dan menyalin perintah sesuai kebutuhan pengembangan Anda:</p>
+            
+            <div class="builder-container">
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label for="input-url">URL Dev Server Lokal</label>
+                        <input type="text" id="input-url" class="form-control" value="http://localhost:4321" oninput="updateCommand()">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-paths">Rute / Paths (pisahkan koma)</label>
+                        <input type="text" id="input-paths" class="form-control" value="/, /scan, /profile" oninput="updateCommand()">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-platform">Platform Target</label>
+                        <select id="input-platform" class="form-control" onchange="updateCommand()">
+                            <option value="ios">iOS (App Store)</option>
+                            <option value="android">Android (Play Store)</option>
+                            <option value="both">Both (iOS & Android Sekaligus)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="input-output">Folder Output</label>
+                    <input type="text" id="input-output" class="form-control" value="mobilesnap_output" oninput="updateCommand()">
+                </div>
+
+                <div class="builder-output">
+                    <div class="builder-cmd" id="cmd-preview">mobilesnap --url http://localhost:4321 --paths "/, /scan, /profile" --output mobilesnap_output</div>
+                    <button class="btn-action-copy" onclick="copyText('cmd-preview', true)">Copy Command</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detail Opsi Parameter -->
+        <section class="glass-card">
+            <h2>⚙️ Parameter & Opsi CLI</h2>
+            <table class="option-table">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Alias</th>
+                        <th>Deskripsi</th>
+                        <th>Bawaan (Default)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="param-tag">--url</span></td>
+                        <td><span class="param-tag">-u</span></td>
+                        <td><strong>(Wajib)</strong> URL server lokal yang sedang berjalan (contoh: Astro).</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-tag">--paths</span></td>
+                        <td><span class="param-tag">-p</span></td>
+                        <td>Daftar rute halaman yang dipisahkan dengan tanda koma.</td>
+                        <td><code style="color: var(--secondary);">"/"</code></td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-tag">--platform</span></td>
+                        <td><span class="param-tag">-l</span></td>
+                        <td>Platform yang ingin ditangkap: <code style="color: var(--secondary);">"ios"</code>, <code style="color: var(--secondary);">"android"</code>, atau <code style="color: var(--secondary);">"both"</code>.</td>
+                        <td><code style="color: var(--secondary);">"ios"</code></td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-tag">--output</span></td>
+                        <td><span class="param-tag">-o</span></td>
+                        <td>Folder tujuan untuk menaruh berkas gambar hasil tangkapan.</td>
+                        <td><code style="color: var(--secondary);">"mobilesnap_output"</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Penanganan Masalah & Ketahanan -->
+        <section class="glass-card">
+            <h2>🛡️ Ketahanan Sistem & Fitur Khusus</h2>
+            
+            <div class="alert-box alert-warning">
+                <div class="alert-icon">💡</div>
+                <div class="alert-text">
+                    <h5>Skema Protokol URL & Auto-Normalisasi</h5>
+                    <p>MobileSnap secara otomatis mendeteksi jika URL tidak memiliki protokol (seperti <code>localhost:3000</code>) dan menambahkan <code>http://</code> secara dinamis.</p>
+                </div>
+            </div>
+
+            <div class="alert-box alert-warning">
+                <div class="alert-icon">🌐</div>
+                <div class="alert-text">
+                    <h5>User-Agent Dinamis per Platform</h5>
+                    <p>Ketika platform Android berjalan, mesin otomatisasi mengemulasi Agen Pengguna Android 13 (Pixel 7). Sedangkan untuk platform iOS, digunakan Agen Pengguna iPhone. Ini menjamin server memberikan respon tampilan yang tepat sesuai target vendor.</p>
+                </div>
+            </div>
+            
+            <div class="alert-box alert-warning">
+                <div class="alert-icon">📁</div>
+                <div class="alert-text">
+                    <h5>Skala Resolusi Retina (DPI 3x)</h5>
+                    <p>Semua screenshot ditangkap dengan pengaturan <code>device_scale_factor=3</code> untuk menjaga kualitas output tetap tajam untuk standar unggahan store resmi.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 MobileSnap CLI Tool. Dibuat dengan presisi visual untuk kebutuhan App Store & Play Store Anda.</p>
+    </footer>
+
+    <script>
+        function updateCommand() {
+            const url = document.getElementById('input-url').value.trim() || 'http://localhost:4321';
+            const paths = document.getElementById('input-paths').value.trim();
+            const output = document.getElementById('input-output').value.trim() || 'mobilesnap_output';
+            const platform = document.getElementById('input-platform').value;
+            
+            let command = `mobilesnap --url ${url}`;
+            if (paths) {
+                command += ` --paths "${paths}"`;
+            }
+            if (platform !== 'ios') {
+                command += ` --platform ${platform}`;
+            }
+            if (output !== 'mobilesnap_output') {
+                command += ` --output ${output}`;
+            }
+            
+            document.getElementById('cmd-preview').innerText = command;
+        }
+
+        function copyText(elementId, isInner) {
+            const element = document.getElementById(elementId);
+            const textToCopy = isInner ? element.innerText : element.textContent;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert('Teks berhasil disalin ke clipboard!');
+            }).catch(err => {
+                console.error('Gagal menyalin teks: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
