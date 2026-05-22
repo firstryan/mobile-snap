@@ -580,14 +580,14 @@
         <div class="header-glow"></div>
         <div class="container">
             <h1>MobileSnap 📸</h1>
-            <p class="tagline">Otomasi Pixel-Precise App Store & Play Store Screenshots dari Server Lokal secara Dual-Vendor.</p>
+            <p class="tagline">Otomasi Pixel-Precise App Store & Play Store Screenshots dari Server Lokal secara Dual-Vendor menggunakan NPX.</p>
             
             <div class="badge-container">
                 <div class="badge">
-                    <span>Python 3.8+</span>
+                    <span>Node.js / NPX</span>
                 </div>
                 <div class="badge">
-                    <span>Playwright Async</span>
+                    <span>Playwright</span>
                 </div>
                 <div class="badge badge-accent">
                     <span>iOS & Android</span>
@@ -600,7 +600,7 @@
         <!-- Arsitektur Utama -->
         <section class="glass-card">
             <h2>🏗️ Arsitektur Aliran Kerja</h2>
-            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">MobileSnap dibangun menggunakan <strong>Typer</strong> untuk antarmuka CLI yang kaya, dan <strong>Playwright Async API</strong> untuk mengontrol Chromium secara berurutan pada berbagai dimensi.</p>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">MobileSnap dibangun menggunakan <strong>Commander</strong> untuk antarmuka CLI yang kaya, dan <strong>Playwright Node API</strong> untuk mengontrol Chromium secara berurutan pada berbagai dimensi.</p>
             
             <div class="arch-flow">
                 <div class="arch-node">
@@ -691,8 +691,8 @@
 
         <!-- Cara Instalasi -->
         <section class="glass-card">
-            <h2>🚀 Instalasi & Penyiapan</h2>
-            <p style="color: var(--text-muted); margin-bottom: 1rem;">Lakukan instalasi paket lokal dalam mode editable untuk memetakan perintah CLI secara global.</p>
+            <h2>🚀 Cara Penggunaan Instan (NPX)</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">Anda tidak perlu melakukan penyiapan manual. Cukup gunakan <code>npx</code> untuk menjalankan MobileSnap.</p>
             
             <div class="terminal">
                 <div class="terminal-header">
@@ -706,18 +706,18 @@
                 <div class="terminal-body">
                     <button class="btn-copy" onclick="copyText('setup-cmds')">Copy</button>
                     <pre id="setup-cmds" style="font-family: inherit;">
-<span class="terminal-comment"># 1. Masuk ke direktori project MobileSnap kemudian install paket lokal</span>
-<span class="terminal-prompt">PS></span>pip install -e .
+<span class="terminal-comment"># 1. Jalankan instan menggunakan npx (ganti port sesuai server lokal Anda)</span>
+<span class="terminal-prompt">PS></span>npx mobile-snap --url http://localhost:4321
 
-<span class="terminal-comment"># 2. Instal driver browser Chromium Playwright</span>
-<span class="terminal-prompt">PS></span>playwright install chromium</pre>
+<span class="terminal-comment"># 2. Opsional: Unduh browser binaries jika Playwright belum dikonfigurasi di sistem</span>
+<span class="terminal-prompt">PS></span>npx playwright install chromium</pre>
                 </div>
             </div>
         </section>
 
         <!-- Interaktif Command Builder -->
         <section class="glass-card">
-            <h2>⚡ CLI Command Builder (Dual-Vendor)</h2>
+            <h2>⚡ CLI Command Builder (NPM / NPX)</h2>
             <p style="color: var(--text-muted);">Gunakan builder interaktif ini untuk membuat dan menyalin perintah sesuai kebutuhan pengembangan Anda:</p>
             
             <div class="builder-container">
@@ -745,7 +745,7 @@
                 </div>
 
                 <div class="builder-output">
-                    <div class="builder-cmd" id="cmd-preview">mobilesnap --url http://localhost:4321 --paths "/, /scan, /profile" --output mobilesnap_output</div>
+                    <div class="builder-cmd" id="cmd-preview">npx mobile-snap --url http://localhost:4321 --paths "/, /scan, /profile" --output mobilesnap_output</div>
                     <button class="btn-action-copy" onclick="copyText('cmd-preview', true)">Copy Command</button>
                 </div>
             </div>
@@ -816,7 +816,7 @@
                 <div class="alert-icon">📁</div>
                 <div class="alert-text">
                     <h5>Skala Resolusi Retina (DPI 3x)</h5>
-                    <p>Semua screenshot ditangkap dengan pengaturan <code>device_scale_factor=3</code> untuk menjaga kualitas output tetap tajam untuk standar unggahan store resmi.</p>
+                    <p>Semua screenshot ditangkap dengan pengaturan <code>deviceScaleFactor: 3</code> untuk menjaga kualitas output tetap tajam untuk standar unggahan store resmi.</p>
                 </div>
             </div>
         </section>
@@ -833,7 +833,7 @@
             const output = document.getElementById('input-output').value.trim() || 'mobilesnap_output';
             const platform = document.getElementById('input-platform').value;
             
-            let command = `mobilesnap --url ${url}`;
+            let command = `npx mobile-snap --url ${url}`;
             if (paths) {
                 command += ` --paths "${paths}"`;
             }

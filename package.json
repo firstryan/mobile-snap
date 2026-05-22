@@ -1,0 +1,26 @@
+{
+  "name": "mobile-snap",
+  "version": "1.0.0",
+  "description": "Automate pixel-precise App Store & Google Play screenshots from a local web server",
+  "type": "module",
+  "main": "bin/cli.js",
+  "bin": {
+    "mobile-snap": "./bin/cli.js"
+  },
+  "keywords": [
+    "screenshot",
+    "app store",
+    "play store",
+    "playwright",
+    "cli",
+    "automation"
+  ],
+  "author": "First Ryan",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.1.0",
+    "ora": "^7.0.1",
+    "picocolors": "^1.0.0",
+    "playwright": "^1.40.0"
+  }
+}

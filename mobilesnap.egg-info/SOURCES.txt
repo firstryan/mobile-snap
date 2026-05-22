@@ -1,0 +1,10 @@
+README.md
+setup.py
+mobilesnap/__init__.py
+mobilesnap/main.py
+mobilesnap.egg-info/PKG-INFO
+mobilesnap.egg-info/SOURCES.txt
+mobilesnap.egg-info/dependency_links.txt
+mobilesnap.egg-info/entry_points.txt
+mobilesnap.egg-info/requires.txt
+mobilesnap.egg-info/top_level.txt
