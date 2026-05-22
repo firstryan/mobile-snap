@@ -1,0 +1,33 @@
+# Node dependencies
+node_modules/
+
+# Python Virtual Environment & build files
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.pyc
+mobilesnap.egg-info/
+build/
+dist/
+
+# MobileSnap generated output directories
+mobilesnap_output/
+mobilesnap_output_android/
+mobilesnap_output_new/
+mobilesnap_crawl_output/
+mobilesnap_test_grouped/
+mobilesnap_test_output/
+test_output/
+test_output_no_mockup/
+
+# Local/test screenshots & files
+test_*.png
+test_*.js
+scratch_*.js
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

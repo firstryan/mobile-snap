@@ -186,8 +186,14 @@
             gap: 1.5rem;
         }
 
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
         @media (max-width: 768px) {
-            .grid-2, .grid-3 {
+            .grid-2, .grid-3, .grid-4 {
                 grid-template-columns: 1fr;
             }
             h1 {
@@ -597,6 +603,22 @@
     </header>
 
     <div class="container">
+        <!-- Contoh Output (Mockup Premium) -->
+        <section class="glass-card">
+            <h2>📱 Contoh Output (Mockup Premium)</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Visualisasi nyata dari tangkapan layar yang dibungkus otomatis ke dalam bingkai mockup perangkat premium menggunakan opsi <code>-m</code> atau <code>--mockup</code>:</p>
+            <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 1.5rem;">
+                <div style="text-align: center; max-width: 45%; min-width: 280px;">
+                    <h4 style="margin-bottom: 0.5rem; color: #fff;">iOS (iPhone 6.7" Pro Max)</h4>
+                    <img src="./assets/ios_example.png" alt="iOS Mockup Example" style="max-width: 100%; border-radius: 12px; border: 1px solid var(--border-card); box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+                </div>
+                <div style="text-align: center; max-width: 45%; min-width: 280px;">
+                    <h4 style="margin-bottom: 0.5rem; color: #fff;">Android Phone (Google Pixel 7)</h4>
+                    <img src="./assets/android_example.png" alt="Android Mockup Example" style="max-width: 100%; border-radius: 12px; border: 1px solid var(--border-card); box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+                </div>
+            </div>
+        </section>
+
         <!-- Arsitektur Utama -->
         <section class="glass-card">
             <h2>🏗️ Arsitektur Aliran Kerja</h2>
@@ -721,15 +743,17 @@
             <p style="color: var(--text-muted);">Gunakan builder interaktif ini untuk membuat dan menyalin perintah sesuai kebutuhan pengembangan Anda:</p>
             
             <div class="builder-container">
-                <div class="grid-3">
+                <div class="grid-2">
                     <div class="form-group">
                         <label for="input-url">URL Dev Server Lokal</label>
                         <input type="text" id="input-url" class="form-control" value="http://localhost:4321" oninput="updateCommand()">
                     </div>
                     <div class="form-group">
                         <label for="input-paths">Rute / Paths (pisahkan koma)</label>
-                        <input type="text" id="input-paths" class="form-control" value="/, /scan, /profile" oninput="updateCommand()">
+                        <input type="text" id="input-paths" class="form-control" value="/" oninput="updateCommand()">
                     </div>
+                </div>
+                <div class="grid-4">
                     <div class="form-group">
                         <label for="input-platform">Platform Target</label>
                         <select id="input-platform" class="form-control" onchange="updateCommand()">
@@ -738,14 +762,26 @@
                             <option value="both">Both (iOS & Android Sekaligus)</option>
                         </select>
                     </div>
+                    <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem;">
+                        <input type="checkbox" id="input-crawl" onchange="updateCommand()" style="width: 20px; height: 20px; accent-color: var(--primary);">
+                        <label for="input-crawl" style="margin-bottom: 0; cursor: pointer; color: var(--text-main); font-size: 0.85rem;">Auto-Crawl Links (-c)</label>
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem;">
+                        <input type="checkbox" id="input-detect" onchange="updateCommand()" style="width: 20px; height: 20px; accent-color: var(--primary);">
+                        <label for="input-detect" style="margin-bottom: 0; cursor: pointer; color: var(--text-main); font-size: 0.85rem;">Detect Astro Pages (-d)</label>
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem;">
+                        <input type="checkbox" id="input-mockup" onchange="updateCommand()" style="width: 20px; height: 20px; accent-color: var(--primary);">
+                        <label for="input-mockup" style="margin-bottom: 0; cursor: pointer; color: var(--text-main); font-size: 0.85rem;">Device Mockup Frame (-m)</label>
+                    </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="margin-top: 1rem;">
                     <label for="input-output">Folder Output</label>
                     <input type="text" id="input-output" class="form-control" value="mobilesnap_output" oninput="updateCommand()">
                 </div>
 
                 <div class="builder-output">
-                    <div class="builder-cmd" id="cmd-preview">npx mobile-snap --url http://localhost:4321 --paths "/, /scan, /profile" --output mobilesnap_output</div>
+                    <div class="builder-cmd" id="cmd-preview">npx mobile-snap --url http://localhost:4321</div>
                     <button class="btn-action-copy" onclick="copyText('cmd-preview', true)">Copy Command</button>
                 </div>
             </div>
@@ -787,6 +823,48 @@
                         <td><span class="param-tag">-o</span></td>
                         <td>Folder tujuan untuk menaruh berkas gambar hasil tangkapan.</td>
                         <td><code style="color: var(--secondary);">"mobilesnap_output"</code></td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-tag">--crawl</span></td>
+                        <td><span class="param-tag">-c</span></td>
+                        <td>Menelusuri secara otomatis semua link internal dari halaman beranda.</td>
+                        <td><code style="color: var(--secondary);">false</code></td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-tag">--detect-pages</span></td>
+                        <td><span class="param-tag">-d</span></td>
+                        <td>Memindai direktori folder proyek lokal (Astro/Next.js) untuk rute statis.</td>
+                        <td><code style="color: var(--secondary);">false</code></td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-tag">--email</span></td>
+                        <td>-</td>
+                        <td>Email / Username untuk autentikasi otomatis jika halaman memerlukan login.</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-tag">--password</span></td>
+                        <td>-</td>
+                        <td>Password untuk autentikasi otomatis jika halaman memerlukan login (input disensor).</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-tag">--login-path</span></td>
+                        <td>-</td>
+                        <td>Jalur rute URL ke halaman login.</td>
+                        <td><code style="color: var(--secondary);">"/login.html"</code></td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-tag">--html</span></td>
+                        <td>-</td>
+                        <td>Menambahkan ekstensi .html otomatis ke rute statis yang terdeteksi.</td>
+                        <td><code style="color: var(--secondary);">false</code></td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-tag">--mockup</span></td>
+                        <td><span class="param-tag">-m</span></td>
+                        <td>Membungkus tangkapan layar dalam bingkai mockup perangkat (iPhone/Android) dengan status bar dan bayangan transparan.</td>
+                        <td><code style="color: var(--secondary);">false</code></td>
                     </tr>
                 </tbody>
             </table>
@@ -832,9 +910,12 @@
             const paths = document.getElementById('input-paths').value.trim();
             const output = document.getElementById('input-output').value.trim() || 'mobilesnap_output';
             const platform = document.getElementById('input-platform').value;
+            const crawl = document.getElementById('input-crawl').checked;
+            const detect = document.getElementById('input-detect').checked;
+            const mockup = document.getElementById('input-mockup').checked;
             
             let command = `npx mobile-snap --url ${url}`;
-            if (paths) {
+            if (paths && paths !== '/') {
                 command += ` --paths "${paths}"`;
             }
             if (platform !== 'ios') {
@@ -842,6 +923,15 @@
             }
             if (output !== 'mobilesnap_output') {
                 command += ` --output ${output}`;
+            }
+            if (crawl) {
+                command += ` --crawl`;
+            }
+            if (detect) {
+                command += ` --detect-pages`;
+            }
+            if (mockup) {
+                command += ` --mockup`;
             }
             
             document.getElementById('cmd-preview').innerText = command;

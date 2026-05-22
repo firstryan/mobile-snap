@@ -1,12 +1,22 @@
 {
   "name": "mobile-snap",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Automate pixel-precise App Store & Google Play screenshots from a local web server",
   "type": "module",
   "main": "bin/cli.js",
   "bin": {
-    "mobile-snap": "./bin/cli.js"
+    "mobile-snap": "bin/cli.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/firstryan/mobile-snap.git"
+  },
+  "files": [
+    "bin",
+    "assets",
+    "README.md",
+    "README.html"
+  ],
   "keywords": [
     "screenshot",
     "app store",

@@ -2,6 +2,14 @@
 
 MobileSnap adalah alat CLI (Command Line Interface) berbasis Node.js yang dirancang untuk mengotomatisasi pengambilan tangkapan layar (screenshot) App Store & Google Play Store dengan presisi piksel tinggi langsung dari server pengembangan lokal (seperti Astro, Next.js, React, atau Vue).
 
+### 📱 Contoh Output (Mockup Premium)
+
+Berikut adalah visualisasi nyata dari tangkapan layar yang dibungkus otomatis ke dalam bingkai mockup perangkat premium (menggunakan opsi `-m` atau `--mockup`):
+
+| iOS (iPhone 6.7" Pro Max) | Android Phone (Google Pixel 7) |
+| :---: | :---: |
+| ![iOS Mockup Example](./assets/ios_example.png) | ![Android Mockup Example](./assets/android_example.png) |
+
 ---
 
 ## 🏗️ Arsitektur Sistem
@@ -77,7 +85,7 @@ npm install -g mobile-snap
 
 ## 💻 Panduan Penggunaan CLI
 
-Aplikasi ini menerima 4 opsi utama:
+Aplikasi ini menerima opsi utama berikut:
 
 | Parameter | Singkatan | Deskripsi | Standar (Default) | Pilihan |
 | :--- | :--- | :--- | :--- | :--- |
@@ -85,6 +93,13 @@ Aplikasi ini menerima 4 opsi utama:
 | `--paths` | `-p` | Jalur/rute halaman yang dipisahkan tanda koma. | `/` | - |
 | `--output`| `-o` | Nama direktori tempat menyimpan gambar. | `mobilesnap_output` | - |
 | `--platform`| `-l`| Platform target tangkapan layar. | `ios` | `ios`, `android`, `both` |
+| `--crawl` | `-c` | Mengaktifkan penelusuran (crawl) otomatis tautan internal di halaman beranda. | `false` | - |
+| `--detect-pages` | `-d` | Memindai direktori halaman lokal (`src/pages` atau `pages`) untuk rute statis. | `false` | - |
+| `--email` | - | Email untuk autentikasi otomatis. | - | - |
+| `--password` | - | Password untuk autentikasi otomatis (disensor di terminal). | - | - |
+| `--login-path`| - | Jalur rute ke halaman login. | `/login.html` | - |
+| `--html` | - | Otomatis menambahkan akhiran `.html` pada rute statis terdeteksi. | `false` | - |
+| `--mockup` | `-m` | Membungkus tangkapan layar dalam bingkai mockup perangkat (iPhone/Android) yang premium dengan status bar dan bayangan transparan. | `false` | - |
 
 ### Contoh Perintah
 
@@ -93,13 +108,71 @@ Aplikasi ini menerima 4 opsi utama:
 npx mobile-snap --url http://localhost:4321
 ```
 
-#### 2. Pengambilan Halaman Android Saja
+#### 2. Pengambilan Halaman Android Saja dengan Mockup Bingkai Perangkat
 ```powershell
-npx mobile-snap --url http://localhost:4321 --platform android
+npx mobile-snap --url http://localhost:4321 --platform android --mockup
 ```
 
-#### 3. Pengambilan 2 Platform Sekaligus (iOS & Android)
+#### 3. Pengambilan Rute Tertentu untuk 2 Platform Sekaligus
 Mengambil gambar halaman utama `/` dan halaman `/scan` untuk kedua platform sekaligus ke folder `hasil_store`:
 ```powershell
 npx mobile-snap --url http://localhost:4321 --paths "/, /scan" --platform both --output hasil_store
 ```
+
+#### 4. Auto-Crawl Halaman Web & Login Interaktif dengan Mockup Bingkai Perangkat
+Menelusuri semua tautan internal secara otomatis dari beranda dan memotret setiap halaman yang ditemukan dengan bingkai mockup iPhone/Android:
+```powershell
+npx mobile-snap --url http://localhost:4321 --crawl --platform both --mockup
+```
+
+
+#### 5. Auto-Detect Rute Proyek Lokal (Astro / Next.js) dengan Auto-Login
+Jika Anda berada di dalam root direktori proyek Astro Anda, jalankan perintah ini untuk mendeteksi secara otomatis semua rute halaman statis dari folder `src/pages` dengan login otomatis:
+```powershell
+npx mobile-snap --url http://localhost:4321 --detect-pages --html --email "user@email.com" --password "rahasia"
+```
+
+---
+
+## 🔐 Autentikasi Otomatis & Interaktif
+
+MobileSnap secara cerdas membedakan halaman publik dan halaman terproteksi (yang membutuhkan login) berdasarkan pengalihan client-side ke rute login.
+
+Jika terdeteksi rute yang memerlukan login, MobileSnap akan:
+1. **Meminta Kredensial Secara Interaktif**: Jika opsi `--email` dan/atau `--password` tidak diberikan lewat CLI, sistem akan menanyakan email dan password secara interaktif di terminal dengan sensor password otomatis demi keamanan.
+2. **Auto-Login**: MobileSnap akan melakukan proses sign-in sebelum mengambil tangkapan layar untuk semua rute terproteksi.
+3. **Crawl Pasca-Login**: Jika opsi `--crawl` aktif, MobileSnap juga akan menjelajahi menu dan tautan internal yang baru muncul di dashboard pasca-login.
+
+---
+
+## ℹ️ Bantuan Perintah (`--help`)
+
+Anda selalu dapat memanggil opsi bantuan langsung dari terminal dengan menjalankan:
+
+```powershell
+npx mobile-snap --help
+```
+
+Output bantuan resmi:
+```text
+Usage: mobile-snap [options]
+
+⚡ MobileSnap CLI: Automate App Store & Google Play Store screenshots
+
+Options:
+  -V, --version              output the version number
+  -u, --url <url>            Base URL of the local development server (e.g. localhost:3000)
+  -p, --paths <paths>        Comma-separated list of routes to capture (default: "/")
+  -o, --output <output>      Output directory to save screenshots (default: "mobilesnap_output")
+  -l, --platform <platform>  Target platform: "ios", "android", or "both" (default: "ios")
+  -c, --crawl                Discover and screenshot all internal links automatically (default: false)
+  -d, --detect-pages         Scan local project pages directory (src/pages or pages) for static routes (default: false)
+  --email <email>            Email for automatic login authentication
+  --password <password>      Password for automatic login authentication
+  --login-path <path>        Path to the login page (default: "/login.html")
+  --html                     Auto append .html extension to detected routes (default: false)
+  -m, --mockup               Wrap screenshots in a beautiful iPhone/Android device mockup frame (default: false)
+  -h, --help                 display help for command
+```
+
+
