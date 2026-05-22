@@ -969,7 +969,7 @@ async function captureScreenshots(url, paths, outputDir, platform, crawl, detect
 program
   .name('mobile-snap')
   .description('⚡ MobileSnap CLI: Automate App Store & Google Play Store screenshots')
-  .version('1.0.3')
+  .version('1.0.4')
   .requiredOption('-u, --url <url>', 'Base URL of the local development server (e.g. localhost:3000)')
   .option('-p, --paths <paths>', 'Comma-separated list of routes to capture', '/')
   .option('-o, --output <output>', 'Output directory to save screenshots', 'mobilesnap_output')
