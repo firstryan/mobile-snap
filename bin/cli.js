@@ -8,7 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
 
-// Device configurations dengan ukuran logis (CSS pixels) dan scale factor untuk resolusi fisik presisi
+// Device configurations with logical dimensions (CSS pixels) and device scale factor for precise physical resolution
 const DEVICE_CONFIGS = {
   ios: {
     devices: {
@@ -68,7 +68,7 @@ function safeFilename(route) {
   return cleanPath.replace(/[^a-zA-Z0-9_\-]/g, '_').replace(/_+/g, '_').replace(/^_+|_+$/g, '');
 }
 
-// Fungsi pembantu untuk memindai folder src/pages atau pages (Astro/Next.js)
+// Helper function to scan the src/pages or pages directory (for Astro, Next.js, etc.)
 function detectLocalPages(dir = process.cwd()) {
   const pagesDirs = [
     path.join(dir, 'src', 'pages'),
@@ -100,11 +100,11 @@ function detectLocalPages(dir = process.cwd()) {
           if (name === 'index') {
             route = baseRoute || '/';
           }
-          // Abaikan rute dinamis yang mengandung [ atau ]
+          // Ignore dynamic routes containing [ or ]
           if (!route.includes('[') && !route.includes(']')) {
-            // Pastikan diawali /
+            // Ensure it starts with /
             let finalRoute = '/' + route.replace(/^\/+/, '');
-            // Abaikan rute API (server endpoint)
+            // Ignore API routes (server endpoints)
             if (!finalRoute.startsWith('/api/')) {
               routes.push(finalRoute);
             }
@@ -118,7 +118,7 @@ function detectLocalPages(dir = process.cwd()) {
   return [...new Set(routes)];
 }
 
-// Fungsi pembantu untuk melakukan crawling internal links dari halaman utama
+// Helper function to crawl internal links starting from the home page
 async function analyzeRoutes(browser, baseUrl, initialPaths, email, password, loginPath, addHtml, crawl) {
   const normLoginPath = '/' + loginPath.replace(/^\/+/, '');
   const publicRoutes = new Set();
@@ -142,10 +142,10 @@ async function analyzeRoutes(browser, baseUrl, initialPaths, email, password, lo
     console.error(pc.red(`      [Crawler Error] ${err.message}`));
   });
 
-  const nonAuthSpinner = ora('Menganalisis rute publik dan mendeteksi kebutuhan autentikasi...').start();
+  const nonAuthSpinner = ora('Analyzing public routes and detecting authentication requirements...').start();
   const routesToCheck = Array.from(allDetectedRoutes);
 
-  // Jika daftar awal kosong, tambahkan root '/'
+  // If the initial path list is empty, default to the root path '/'
   if (routesToCheck.length === 0) {
     routesToCheck.push('/');
     allDetectedRoutes.add('/');
@@ -163,7 +163,7 @@ async function analyzeRoutes(browser, baseUrl, initialPaths, email, password, lo
       await page.goto(targetUrl, { timeout: 15000 });
       await page.waitForLoadState('networkidle', { timeout: 3000 }).catch(() => {});
       
-      // Tunggu client-side redirect (seperti splash screen ke login) selesai secara dinamis
+      // Wait dynamically for client-side redirects (such as splash screen to login) to complete
       if (cleanRoute === '/' || cleanRoute.includes('splash')) {
         await page.waitForURL(u => {
           const pathname = u.pathname;
@@ -181,12 +181,12 @@ async function analyzeRoutes(browser, baseUrl, initialPaths, email, password, lo
         finalPath = finalUrl;
       }
 
-      // Bersihkan finalPath agar berakhiran .html jika flag aktif
+      // Normalize finalPath to end with .html if the flag is active
       if (addHtml && finalPath !== '/' && !finalPath.endsWith('.html') && !/\.[a-z0-9]+$/i.test(finalPath)) {
         finalPath += '.html';
       }
 
-      // Cek apakah ada form login atau input kredensial di DOM halaman saat ini
+      // Check if a login form or credential inputs are present in the current page DOM
       const hasLoginForm = await page.evaluate(() => {
         const hasUser = !!document.querySelector('#username, input[type="email"], input[name="username"], input[name="login"]');
         const hasPass = !!document.querySelector('#password, input[type="password"], input[name="password"]');
@@ -217,7 +217,7 @@ async function analyzeRoutes(browser, baseUrl, initialPaths, email, password, lo
         publicRoutes.add(cleanRoute);
       }
 
-      // Selalu rayapi link publik jika crawl aktif dan halaman saat ini tidak memerlukan login (tidak ter-redirect)
+      // Always crawl public links if crawling is active and the current page does not require authentication
       if (crawl && !authRoutes.has(cleanRoute)) {
         const hrefs = await page.evaluate(() => {
           return Array.from(document.querySelectorAll('a'))
@@ -253,32 +253,32 @@ async function analyzeRoutes(browser, baseUrl, initialPaths, email, password, lo
         }
       }
     } catch (err) {
-      ora().warn(pc.yellow(`Gagal menganalisis rute ${cleanRoute}: ${err.message}`));
+      ora().warn(pc.yellow(`Failed to analyze route ${cleanRoute}: ${err.message}`));
       publicRoutes.add(cleanRoute);
     }
   }
   
   await context.close();
-  nonAuthSpinner.succeed(`Analisis awal selesai. Terdeteksi ${publicRoutes.size} rute publik dan ${authRoutes.size} rute membutuhkan autentikasi.`);
+  nonAuthSpinner.succeed(`Initial analysis complete. Detected ${publicRoutes.size} public routes and ${authRoutes.size} routes requiring authentication.`);
 
-  // 2. Tanya Kredensial secara interaktif jika ada rute auth dan email/pass kosong
+  // 2. Prompt for credentials interactively if there are authenticated routes and email/password are empty
   let finalEmail = email;
   let finalPassword = password;
 
   if (authRoutes.size > 0 && (!finalEmail || !finalPassword)) {
-    console.log(pc.yellow(`\n🔑 Mendeteksi ${authRoutes.size} halaman yang membutuhkan login.`));
+    console.log(pc.yellow(`\n🔑 Detected ${authRoutes.size} pages requiring login.`));
     if (!finalEmail) {
-      finalEmail = await promptUser('👉 Masukkan Email/Username: ');
+      finalEmail = await promptUser('👉 Enter Email/Username: ');
     }
     if (!finalPassword) {
-      finalPassword = await promptUser('👉 Masukkan Password (input tersembunyi): ', true);
-      console.log(''); // baris baru setelah menekan enter
+      finalPassword = await promptUser('👉 Enter Password (hidden input): ', true);
+      console.log(''); // new line after pressing enter
     }
   }
 
-  // 3. Crawl Fase Kedua (Login) untuk merayapi halaman dashboard internal
+  // 3. Phase Two Crawl (Post-Login) to discover internal dashboard pages
   if (authRoutes.size > 0 && finalEmail && finalPassword) {
-    const authCrawlSpinner = ora('Melakukan login dan memindai halaman internal...').start();
+    const authCrawlSpinner = ora('Performing login and crawling authenticated internal pages...').start();
     const authContext = await browser.newContext();
     const authPage = await authContext.newPage();
 
@@ -333,7 +333,7 @@ async function analyzeRoutes(browser, baseUrl, initialPaths, email, password, lo
       }
 
       if (!loginSuccess) {
-        throw new Error(loginError || 'Timeout: URL halaman tidak berubah dari halaman login setelah 10 detik.');
+        throw new Error(loginError || 'Timeout: Page URL did not change from the login page after 10 seconds.');
       }
 
       if (crawl) {
@@ -378,13 +378,13 @@ async function analyzeRoutes(browser, baseUrl, initialPaths, email, password, lo
               } catch (e) {}
             }
           } catch (routeErr) {
-            // Abaikan jika rute tertentu gagal muat
+            // Ignore if a specific route fails to load
           }
         }
       }
-      authCrawlSpinner.succeed(`Crawl pasca-login selesai. Menemukan total ${authRoutes.size} rute terotentikasi.`);
+      authCrawlSpinner.succeed(`Post-login crawl complete. Found a total of ${authRoutes.size} authenticated routes.`);
     } catch (err) {
-      authCrawlSpinner.fail(`Gagal merayapi halaman terotentikasi: ${err.message}`);
+      authCrawlSpinner.fail(`Failed to crawl authenticated pages: ${err.message}`);
     } finally {
       await authContext.close();
     }
@@ -681,14 +681,14 @@ async function captureScreenshots(url, paths, outputDir, platform, crawl, detect
 
   let finalPaths = [...paths];
 
-  // 1. Auto-detect halaman lokal jika diaktifkan
+  // 1. Auto-detect local pages if enabled
   if (detectPages) {
     const localRoutes = detectLocalPages();
     if (localRoutes && localRoutes.length > 0) {
-      console.log(pc.green(`🔍 Mendeteksi folder halaman lokal. Menambahkan ${localRoutes.length} rute statis.`));
+      console.log(pc.green(`🔍 Detected local pages folder. Adding ${localRoutes.length} static routes.`));
       finalPaths = [...new Set([...finalPaths, ...localRoutes])];
     } else {
-      console.log(pc.yellow(`⚠ Folder 'src/pages' atau 'pages' tidak ditemukan di direktori saat ini.`));
+      console.log(pc.yellow(`⚠ Folder 'src/pages' or 'pages' not found in the current directory.`));
     }
   }
 
@@ -697,12 +697,12 @@ async function captureScreenshots(url, paths, outputDir, platform, crawl, detect
   console.log(`Platform(s): ${pc.cyan(targetPlatforms.join(', ').toUpperCase())}`);
   console.log(`Output Directory: ${pc.cyan(path.resolve(outputDir))}\n`);
 
-  // Pastikan direktori output ada
+  // Ensure the output directory exists
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
-  // Luncurkan browser
+  // Launch browser
   let browser;
   const launchSpinner = ora('Launching Chromium browser...').start();
   try {
@@ -714,33 +714,33 @@ async function captureScreenshots(url, paths, outputDir, platform, crawl, detect
   } catch (err) {
     launchSpinner.fail(pc.red('Failed to launch Chromium browser'));
     console.error(pc.red(err.message));
-    console.log(pc.yellow('\n💡 Tips: Jalankan "npx playwright install chromium" untuk mengunduh browser binaries.'));
+    console.log(pc.yellow('\n💡 Tip: Run "npx playwright install chromium" to download browser binaries.'));
     process.exit(1);
   }
 
-  // Panggil analyzeRoutes untuk memisahkan rute publik dan terotentikasi
+  // Call analyzeRoutes to separate public and authenticated routes
   let result;
   try {
     result = await analyzeRoutes(browser, url, finalPaths, email, password, loginPath, addHtml, crawl);
   } catch (err) {
-    console.error(pc.red(`Gagal menganalisis rute: ${err.message}`));
+    console.error(pc.red(`Failed to analyze routes: ${err.message}`));
     await browser.close();
     process.exit(1);
   }
 
   const { publicRoutes, authRoutes, email: finalEmail, password: finalPassword } = result;
 
-  console.log(pc.bold(`\nTerdeteksi Rute Publik (${publicRoutes.length}):`));
+  console.log(pc.bold(`\nDetected Public Routes (${publicRoutes.length}):`));
   publicRoutes.forEach(p => console.log(`  - ${pc.green(p)}`));
   
   if (authRoutes.length > 0) {
-    console.log(pc.bold(`\nTerdeteksi Rute Membutuhkan Autentikasi (${authRoutes.length}):`));
+    console.log(pc.bold(`\nDetected Routes Requiring Authentication (${authRoutes.length}):`));
     authRoutes.forEach(p => console.log(`  - ${pc.cyan(p)}`));
   }
   console.log('');
 
   if (publicRoutes.length === 0 && authRoutes.length === 0) {
-    console.log(pc.yellow('Tidak ada rute yang ditemukan untuk dipotret.'));
+    console.log(pc.yellow('No routes were found to capture.'));
     await browser.close();
     return;
   }
@@ -816,9 +816,9 @@ async function captureScreenshots(url, paths, outputDir, platform, crawl, detect
         console.error(pc.red(`      [Browser Error] ${err.message}`));
       });
 
-      // --- Tahap 1: Memotret Halaman Publik (Tanpa Login) ---
+      // --- Phase 1: Capturing Public Pages (No Login) ---
       if (publicRoutes.length > 0) {
-        console.log(`    📸 Memotret halaman publik...`);
+        console.log(`    📸 Capturing public pages...`);
         for (const route of publicRoutes) {
           const targetUrl = `${url}${route}`;
           const nameSnippet = safeFilename(route);
@@ -841,7 +841,7 @@ async function captureScreenshots(url, paths, outputDir, platform, crawl, detect
         }
       }
 
-      // --- Tahap 2: Memotret Halaman Terotentikasi ---
+      // --- Phase 2: Capturing Authenticated Pages ---
       if (authRoutes.length > 0) {
         if (finalEmail && finalPassword) {
           const loginSpinner = ora(`    Logging in to session for ${deviceName}...`).start();
@@ -856,7 +856,7 @@ async function captureScreenshots(url, paths, outputDir, platform, crawl, detect
             const submitBtn = await page.locator('button[type="submit"], button.save-btn').first();
             await submitBtn.click();
             
-            // Tunggu hingga login berhasil (URL berubah) atau ada error message
+            // Wait for login success (URL change) or an error message to appear
             let loginSuccess = false;
             let loginError = '';
             for (let i = 0; i < 40; i++) {
@@ -882,12 +882,12 @@ async function captureScreenshots(url, paths, outputDir, platform, crawl, detect
             }
 
             if (!loginSuccess) {
-              throw new Error(loginError || 'Timeout: URL halaman tidak berubah dari halaman login setelah 10 detik.');
+              throw new Error(loginError || 'Timeout: Page URL did not change from the login page after 10 seconds.');
             }
 
             loginSpinner.succeed(`    Logged in successfully for ${deviceName}`);
 
-            console.log(`    📸 Memotret halaman terotentikasi...`);
+            console.log(`    📸 Capturing authenticated pages...`);
             for (const route of authRoutes) {
               const targetUrl = `${url}${route}`;
               const nameSnippet = safeFilename(route);
@@ -910,7 +910,7 @@ async function captureScreenshots(url, paths, outputDir, platform, crawl, detect
             }
           } catch (loginErr) {
             loginSpinner.fail(pc.red(`    Auto-login failed for ${deviceName}: ${loginErr.message}`));
-            console.log(pc.yellow(`    💡 Melanjutkan capture auth routes tanpa login (mungkin ter-redirect ke login/splash).`));
+            console.log(pc.yellow(`    💡 Continuing to capture authenticated routes without login (may be redirected to login/splash).`));
             
             for (const route of authRoutes) {
               const targetUrl = `${url}${route}`;
@@ -934,7 +934,7 @@ async function captureScreenshots(url, paths, outputDir, platform, crawl, detect
             }
           }
         } else {
-          console.log(pc.yellow(`    ⚠ Skip login (kredensial kosong). Memotret auth routes tanpa login.`));
+          console.log(pc.yellow(`    ⚠ Skipping login (empty credentials). Capturing authenticated routes without login.`));
           for (const route of authRoutes) {
             const targetUrl = `${url}${route}`;
             const nameSnippet = safeFilename(route);
@@ -963,13 +963,13 @@ async function captureScreenshots(url, paths, outputDir, platform, crawl, detect
   }
 
   await browser.close();
-  console.log(pc.bold(pc.green(`\n🎉 Selesai! Semua tangkapan layar disimpan di '${outputDir}'.`)));
+  console.log(pc.bold(pc.green(`\n🎉 Finished! All screenshots successfully saved in '${outputDir}'.`)));
 }
 
 program
   .name('mobile-snap')
   .description('⚡ MobileSnap CLI: Automate App Store & Google Play Store screenshots')
-  .version('1.0.4')
+  .version('1.0.5')
   .requiredOption('-u, --url <url>', 'Base URL of the local development server (e.g. localhost:3000)')
   .option('-p, --paths <paths>', 'Comma-separated list of routes to capture', '/')
   .option('-o, --output <output>', 'Output directory to save screenshots', 'mobilesnap_output')
@@ -989,7 +989,7 @@ program
     
     const platformVal = options.platform.toLowerCase();
     if (!['ios', 'android', 'both'].includes(platformVal)) {
-      console.error(pc.red(`Error: Platform '${options.platform}' tidak valid. Pilih antara 'ios', 'android', atau 'both'.`));
+      console.error(pc.red(`Error: Invalid platform '${options.platform}'. Choose 'ios', 'android', or 'both'.`));
       process.exit(1);
     }
 
@@ -1006,7 +1006,7 @@ program
       options.html,
       options.mockup
     ).catch(err => {
-      console.error(pc.red(`Terjadi kesalahan tidak terduga: ${err.message}`));
+      console.error(pc.red(`An unexpected error occurred: ${err.message}`));
       process.exit(1);
     });
   });

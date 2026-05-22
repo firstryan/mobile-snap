@@ -1,10 +1,10 @@
 # MobileSnap 📸
 
-MobileSnap adalah alat CLI (Command Line Interface) berbasis Node.js yang dirancang untuk mengotomatisasi pengambilan tangkapan layar (screenshot) App Store & Google Play Store dengan presisi piksel tinggi langsung dari server pengembangan lokal (seperti Astro, Next.js, React, atau Vue).
+MobileSnap is a Node.js-based CLI (Command Line Interface) tool designed to automate the capture of pixel-precise App Store and Google Play Store screenshots directly from local development servers (such as Astro, Next.js, React, or Vue).
 
-### 📱 Contoh Output (Mockup Premium)
+### 📱 Sample Output (Premium Mockups)
 
-Berikut adalah visualisasi nyata dari tangkapan layar yang dibungkus otomatis ke dalam bingkai mockup perangkat premium (menggunakan opsi `-m` atau `--mockup`):
+Below is a real-world visualization of screenshots automatically wrapped in premium device mockup frames (using the `-m` or `--mockup` option):
 
 | iOS (iPhone 6.7" Pro Max) | Android Phone (Google Pixel 7) |
 | :---: | :---: |
@@ -12,148 +12,147 @@ Berikut adalah visualisasi nyata dari tangkapan layar yang dibungkus otomatis ke
 
 ---
 
-## 🏗️ Arsitektur Sistem
+## 🏗️ System Architecture
 
-MobileSnap dirancang dengan fokus pada efisiensi, keandalan, dan kemudahan penggunaan. Berikut adalah diagram alur kerja utama aplikasi:
+MobileSnap is designed with a focus on efficiency, reliability, and ease of use. Below is the main workflow diagram of the application:
 
 ```mermaid
 graph TD
-    A[Pengguna menjalankan perintah CLI npx] --> B[Commander CLI Parser]
-    B --> C{Validasi Argumen & URL}
-    C -->|URL Valid| D[Inisialisasi Playwright Async]
-    C -->|URL Tidak Valid| E[Console Error & Exit]
-    D --> F[Buka Headless Chromium Browser]
-    F --> G[Looping berdasarkan Pilihan Platform: iOS / Android / Both]
-    G --> H[Konfigurasi Context & Viewport Emulator Perangkat]
-    H --> I[Looping berdasarkan Jalur/Rute URL]
-    I --> J[Navigasi Halaman & Tunggu State Network Idle]
-    J --> K[Ambil Tangkapan Layar & Simpan File]
-    K --> L[Tutup Context Browser]
-    L --> M[Selesai & Tampilkan Ringkasan]
+    A[User runs npx CLI command] --> B[Commander CLI Parser]
+    B --> C{Validate Arguments & URL}
+    C -->|Valid URL| D[Initialize Playwright Async]
+    C -->|Invalid URL| E[Console Error & Exit]
+    D --> F[Launch Headless Chromium Browser]
+    F --> G[Loop through Platform Choices: iOS / Android / Both]
+    G --> H[Configure Device Emulator Context & Viewport]
+    H --> I[Loop through URL Paths/Routes]
+    I --> J[Navigate to Page & Wait for Network Idle]
+    J --> K[Capture Screenshot & Save File]
+    K --> L[Close Browser Context]
+    L --> M[Done & Display Summary]
 ```
 
-### Komponen Utama
+### Main Components
 
-1. **Parser CLI ([bin/cli.js](file:///d:/Deweb/MobileSnap/bin/cli.js))**: Menggunakan library `Commander` untuk memproses input parameter dari pengguna secara intuitif.
-2. **Mesin Otomatisasi Browser**: Berbasis `Playwright` untuk menjalankan proses Chromium tanpa kepala (*headless*).
-3. **Pengaturan Emulator Presisi**:
-   - **Skala Perangkat (DPI)**: Ditetapkan ke `deviceScaleFactor: 3` untuk menghasilkan kualitas tangkapan layar yang sangat tajam (Retina/High DPI) sesuai standar rilis.
-   - **Agen Pengguna (User Agent)**: Dikonfigurasi dinamis sesuai platform target (iOS menggunakan user agent iPhone, Android menggunakan user agent Google Pixel 7).
-4. **Sinkronisasi Hidrasi Web**: Menggunakan `page.waitForLoadState("networkidle")` untuk mendeteksi ketika semua aset selesai dimuat sebelum tangkapan layar diambil. Ini sangat penting untuk framework modern seperti Astro.
+1. **CLI Parser ([bin/cli.js](file:///d:/Deweb/MobileSnap/bin/cli.js))**: Uses the `Commander` library to process user input parameters intuitively.
+2. **Browser Automation Engine**: Powered by `Playwright` to run headless Chromium instances.
+3. **Precision Emulator Configuration**:
+   - **Device Scale (DPI)**: Set to `deviceScaleFactor: 3` to produce ultra-sharp screenshots (Retina/High DPI) meeting official store release guidelines.
+   - **User Agent**: Configured dynamically based on the target platform (iOS uses an iPhone user agent; Android uses a Google Pixel 7 user agent).
+4. **Web Hydration Synchronization**: Employs `page.waitForLoadState("networkidle")` to detect when all page assets are fully loaded before capturing the screenshot. This is crucial for modern frameworks like Astro.
 
 ---
 
-## 📱 Spesifikasi Dimensi Target
+## 📱 Target Dimension Specifications
 
-MobileSnap secara otomatis mengambil gambar untuk perangkat berikut berdasarkan platform yang dipilih:
+MobileSnap automatically captures screenshots for the following devices based on the selected platform:
 
 ### iOS (Apple App Store)
-| Nama Layar | Resolusi (Piksel) | Rasio Aspek | Output File Contoh |
+| Display Name | Resolution (Pixels) | Aspect Ratio | Sample Output File |
 | :--- | :--- | :--- | :--- |
 | **6.7" Display** | 1290 x 2796 | 19.5:9 | `6.7_inch_home.png` |
 | **6.5" Display** | 1242 x 2688 | 19.5:9 | `6.5_inch_home.png` |
 
 ### Android (Google Play Store)
-| Nama Layar | Resolusi (Piksel) | Rasio Aspek | Output File Contoh |
+| Display Name | Resolution (Pixels) | Aspect Ratio | Sample Output File |
 | :--- | :--- | :--- | :--- |
 | **Android Phone** | 1080 x 2400 | 20:9 | `android_phone_home.png` |
 | **Android Tablet (10")** | 1600 x 2560 | 16:10 | `android_tablet_home.png` |
 
 ---
 
-## 🚀 Cara Penggunaan Instan (NPX)
+## 🚀 Instant Usage (NPX)
 
-Anda tidak perlu menginstal apa pun secara permanen. Cukup jalankan perintah menggunakan `npx`:
+You do not need to install anything permanently. Simply run the command using `npx`:
 
 ```powershell
-# 1. Jalankan langsung dari server lokal Anda
+# 1. Run directly against your local dev server
 npx mobile-snap --url http://localhost:4321
 ```
 
 > [!NOTE]
-> Jika ini adalah pertama kalinya Anda menjalankan Playwright, Anda mungkin perlu mengunduh browser binaries dengan menjalankan perintah:
+> If this is your first time running Playwright, you may need to download the browser binaries by running:
 > ```powershell
 > npx playwright install chromium
 > ```
 
-Jika Anda ingin menginstalnya secara global di sistem Anda:
+To install it globally on your system:
 ```powershell
 npm install -g mobile-snap
 ```
 
 ---
 
-## 💻 Panduan Penggunaan CLI
+## 💻 CLI Usage Guide
 
-Aplikasi ini menerima opsi utama berikut:
+The application accepts the following main options:
 
-| Parameter | Singkatan | Deskripsi | Standar (Default) | Pilihan |
+| Option | Alias | Description | Default | Choices |
 | :--- | :--- | :--- | :--- | :--- |
-| `--url` | `-u` | **(Wajib)** URL server lokal. | - | - |
-| `--paths` | `-p` | Jalur/rute halaman yang dipisahkan tanda koma. | `/` | - |
-| `--output`| `-o` | Nama direktori tempat menyimpan gambar. | `mobilesnap_output` | - |
-| `--platform`| `-l`| Platform target tangkapan layar. | `ios` | `ios`, `android`, `both` |
-| `--crawl` | `-c` | Mengaktifkan penelusuran (crawl) otomatis tautan internal di halaman beranda. | `false` | - |
-| `--detect-pages` | `-d` | Memindai direktori halaman lokal (`src/pages` atau `pages`) untuk rute statis. | `false` | - |
-| `--email` | - | Email untuk autentikasi otomatis. | - | - |
-| `--password` | - | Password untuk autentikasi otomatis (disensor di terminal). | - | - |
-| `--login-path`| - | Jalur rute ke halaman login. | `/login.html` | - |
-| `--html` | - | Otomatis menambahkan akhiran `.html` pada rute statis terdeteksi. | `false` | - |
-| `--mockup` | `-m` | Membungkus tangkapan layar dalam bingkai mockup perangkat (iPhone/Android) yang premium dengan status bar dan bayangan transparan. | `false` | - |
+| `--url` | `-u` | **(Required)** Local development server URL. | - | - |
+| `--paths` | `-p` | Comma-separated list of routes to capture. | `/` | - |
+| `--output`| `-o` | Name of the directory to save screenshots. | `mobilesnap_output` | - |
+| `--platform`| `-l`| Target platform for screenshots. | `ios` | `ios`, `android`, `both` |
+| `--crawl` | `-c` | Enable automatic discovery (crawling) of internal links on the home page. | `false` | - |
+| `--detect-pages` | `-d` | Scan local project pages directory (`src/pages` or `pages`) for static routes. | `false` | - |
+| `--email` | - | Email for automatic authentication. | - | - |
+| `--password` | - | Password for automatic authentication (hidden in terminal). | - | - |
+| `--login-path`| - | Route path to the login page. | `/login.html` | - |
+| `--html` | - | Automatically append `.html` extension to detected static routes. | `false` | - |
+| `--mockup` | `-m` | Wrap screenshots in beautiful, premium device mockup frames (iPhone/Android) with status bars and transparent drop shadows. | `false` | - |
 
-### Contoh Perintah
+### Command Examples
 
-#### 1. Pengambilan Halaman iOS Saja (Default)
+#### 1. Capture iOS Only (Default)
 ```powershell
 npx mobile-snap --url http://localhost:4321
 ```
 
-#### 2. Pengambilan Halaman Android Saja dengan Mockup Bingkai Perangkat
+#### 2. Capture Android Only with Device Mockup Frame
 ```powershell
 npx mobile-snap --url http://localhost:4321 --platform android --mockup
 ```
 
-#### 3. Pengambilan Rute Tertentu untuk 2 Platform Sekaligus
-Mengambil gambar halaman utama `/` dan halaman `/scan` untuk kedua platform sekaligus ke folder `hasil_store`:
+#### 3. Capture Specific Routes for Both Platforms
+Captures the home page `/` and page `/scan` for both platforms simultaneously into the `hasil_store` directory:
 ```powershell
 npx mobile-snap --url http://localhost:4321 --paths "/, /scan" --platform both --output hasil_store
 ```
 
-#### 4. Auto-Crawl Halaman Web & Login Interaktif dengan Mockup Bingkai Perangkat
-Menelusuri semua tautan internal secara otomatis dari beranda dan memotret setiap halaman yang ditemukan dengan bingkai mockup iPhone/Android:
+#### 4. Auto-Crawl Website & Interactive Login with Device Mockup Frame
+Recursively crawls all internal links from the home page and captures each discovered page with a mockup frame:
 ```powershell
 npx mobile-snap --url http://localhost:4321 --crawl --platform both --mockup
 ```
 
-
-#### 5. Auto-Detect Rute Proyek Lokal (Astro / Next.js) dengan Auto-Login
-Jika Anda berada di dalam root direktori proyek Astro Anda, jalankan perintah ini untuk mendeteksi secara otomatis semua rute halaman statis dari folder `src/pages` dengan login otomatis:
+#### 5. Auto-Detect Local Project Routes (Astro / Next.js) with Auto-Login
+If you are inside the root directory of your Astro/Next.js project, run this command to automatically detect all static page routes from the pages folder and capture them with auto-login:
 ```powershell
 npx mobile-snap --url http://localhost:4321 --detect-pages --html --email "user@email.com" --password "rahasia"
 ```
 
 ---
 
-## 🔐 Autentikasi Otomatis & Interaktif
+## 🔐 Automatic & Interactive Authentication
 
-MobileSnap secara cerdas membedakan halaman publik dan halaman terproteksi (yang membutuhkan login) berdasarkan pengalihan client-side ke rute login.
+MobileSnap intelligently distinguishes between public pages and protected pages (requiring authentication) based on client-side redirects to the login route.
 
-Jika terdeteksi rute yang memerlukan login, MobileSnap akan:
-1. **Meminta Kredensial Secara Interaktif**: Jika opsi `--email` dan/atau `--password` tidak diberikan lewat CLI, sistem akan menanyakan email dan password secara interaktif di terminal dengan sensor password otomatis demi keamanan.
-2. **Auto-Login**: MobileSnap akan melakukan proses sign-in sebelum mengambil tangkapan layar untuk semua rute terproteksi.
-3. **Crawl Pasca-Login**: Jika opsi `--crawl` aktif, MobileSnap juga akan menjelajahi menu dan tautan internal yang baru muncul di dashboard pasca-login.
+If a route requiring login is detected, MobileSnap will:
+1. **Prompt for Credentials Interactively**: If `--email` and/or `--password` options are not supplied via the CLI, the tool will prompt for them in the terminal, masking the password input for security.
+2. **Auto-Login**: MobileSnap performs the sign-in sequence before capturing screenshots for all protected routes.
+3. **Post-Login Crawl**: If the `--crawl` option is enabled, MobileSnap will also discover and crawl internal links that only become visible in the dashboard post-authentication.
 
 ---
 
-## ℹ️ Bantuan Perintah (`--help`)
+## ℹ️ Command Help (`--help`)
 
-Anda selalu dapat memanggil opsi bantuan langsung dari terminal dengan menjalankan:
+You can display the help information directly from the terminal by running:
 
 ```powershell
 npx mobile-snap --help
 ```
 
-Output bantuan resmi:
+Official help output:
 ```text
 Usage: mobile-snap [options]
 
@@ -161,18 +160,24 @@ Usage: mobile-snap [options]
 
 Options:
   -V, --version              output the version number
-  -u, --url <url>            Base URL of the local development server (e.g. localhost:3000)
-  -p, --paths <paths>        Comma-separated list of routes to capture (default: "/")
-  -o, --output <output>      Output directory to save screenshots (default: "mobilesnap_output")
-  -l, --platform <platform>  Target platform: "ios", "android", or "both" (default: "ios")
-  -c, --crawl                Discover and screenshot all internal links automatically (default: false)
-  -d, --detect-pages         Scan local project pages directory (src/pages or pages) for static routes (default: false)
+  -u, --url <url>            Base URL of the local development server (e.g.
+                             localhost:3000)
+  -p, --paths <paths>        Comma-separated list of routes to capture
+                             (default: "/")
+  -o, --output <output>      Output directory to save screenshots (default:
+                             "mobilesnap_output")
+  -l, --platform <platform>  Target platform: "ios", "android", or "both"
+                             (default: "ios")
+  -c, --crawl                Discover and screenshot all internal links
+                             automatically (default: false)
+  -d, --detect-pages         Scan local project pages directory (src/pages or
+                             pages) for static routes (default: false)
   --email <email>            Email for automatic login authentication
   --password <password>      Password for automatic login authentication
   --login-path <path>        Path to the login page (default: "/login.html")
-  --html                     Auto append .html extension to detected routes (default: false)
-  -m, --mockup               Wrap screenshots in a beautiful iPhone/Android device mockup frame (default: false)
+  --html                     Auto append .html extension to detected routes
+                             (default: false)
+  -m, --mockup               Wrap screenshots in a beautiful iPhone/Android
+                             device mockup frame (default: false)
   -h, --help                 display help for command
 ```
-
-

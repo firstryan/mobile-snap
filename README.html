@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MobileSnap - Dokumentasi & Arsitektur</title>
+    <title>MobileSnap - Documentation & Architecture</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -586,7 +586,7 @@
         <div class="header-glow"></div>
         <div class="container">
             <h1>MobileSnap 📸</h1>
-            <p class="tagline">Otomasi Pixel-Precise App Store & Play Store Screenshots dari Server Lokal secara Dual-Vendor menggunakan NPX.</p>
+            <p class="tagline">Automate pixel-precise App Store & Google Play screenshots directly from your local development server using NPX.</p>
             
             <div class="badge-container">
                 <div class="badge">
@@ -603,10 +603,10 @@
     </header>
 
     <div class="container">
-        <!-- Contoh Output (Mockup Premium) -->
+        <!-- Sample Output Mockups -->
         <section class="glass-card">
-            <h2>📱 Contoh Output (Mockup Premium)</h2>
-            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Visualisasi nyata dari tangkapan layar yang dibungkus otomatis ke dalam bingkai mockup perangkat premium menggunakan opsi <code>-m</code> atau <code>--mockup</code>:</p>
+            <h2>📱 Sample Output (Premium Mockups)</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Real-world visualization of screenshots automatically wrapped in premium device mockup frames using the <code>-m</code> or <code>--mockup</code> option:</p>
             <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 1.5rem;">
                 <div style="text-align: center; max-width: 45%; min-width: 280px;">
                     <h4 style="margin-bottom: 0.5rem; color: #fff;">iOS (iPhone 6.7" Pro Max)</h4>
@@ -619,38 +619,38 @@
             </div>
         </section>
 
-        <!-- Arsitektur Utama -->
+        <!-- Workflow Architecture -->
         <section class="glass-card">
-            <h2>🏗️ Arsitektur Aliran Kerja</h2>
-            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">MobileSnap dibangun menggunakan <strong>Commander</strong> untuk antarmuka CLI yang kaya, dan <strong>Playwright Node API</strong> untuk mengontrol Chromium secara berurutan pada berbagai dimensi.</p>
+            <h2>🏗️ Workflow Architecture</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">MobileSnap is built using <strong>Commander</strong> for a rich CLI interface, and the <strong>Playwright Node API</strong> to control Chromium sequentially across various dimensions.</p>
             
             <div class="arch-flow">
                 <div class="arch-node">
                     <div class="node-num">1</div>
                     <h4>CLI Parser</h4>
-                    <p>Membaca parameter URL, rute (paths), platform target, dan folder keluaran.</p>
+                    <p>Parses URL parameters, routes (paths), target platforms, and the output directory.</p>
                 </div>
                 <div class="arch-node">
                     <div class="node-num">2</div>
                     <h4>Browser Engine</h4>
-                    <p>Inisiasi Chromium secara terisolasi dan asinkronus.</p>
+                    <p>Launches Chromium in an isolated and asynchronous instance.</p>
                 </div>
                 <div class="arch-node">
                     <div class="node-num">3</div>
                     <h4>Viewport Emulation</h4>
-                    <p>Meniru dimensi layar Retina (iOS) & Android secara dinamis.</p>
+                    <p>Dynamically emulates Retina (iOS) & Android display dimensions.</p>
                 </div>
                 <div class="arch-node">
                     <div class="node-num">4</div>
                     <h4>Hydration Check</h4>
-                    <p>Menunggu aktivitas jaringan idle agar rendering JavaScript selesai.</p>
+                    <p>Waits for network idle state to ensure JavaScript rendering is fully complete.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Target Dimensi -->
+        <!-- Target Dimensions Requirement -->
         <section class="glass-card">
-            <h2>📱 Dimensi Layar Target (Wajib Store)</h2>
+            <h2>📱 Target Screen Dimensions (Store Requirements)</h2>
             
             <h3>🍎 iOS (Apple App Store)</h3>
             <div class="device-showcase">
@@ -662,8 +662,8 @@
                     <div class="device-info">
                         <h4>iPhone 6.7" Display</h4>
                         <div class="resolution">1290 x 2796 pixels</div>
-                        <p>Digunakan untuk jajaran iPhone Max/Pro Max terbaru.</p>
-                        <p style="margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">Berkas: 6.7_inch_[path].png</p>
+                        <p>Used for the latest iPhone Max/Pro Max models.</p>
+                        <p style="margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">File: 6.7_inch_[path].png</p>
                     </div>
                 </div>
 
@@ -675,8 +675,8 @@
                     <div class="device-info">
                         <h4>iPhone 6.5" Display</h4>
                         <div class="resolution">1242 x 2688 pixels</div>
-                        <p>Digunakan untuk seri iPhone Xs Max / 11 Pro Max.</p>
-                        <p style="margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">Berkas: 6.5_inch_[path].png</p>
+                        <p>Used for the iPhone Xs Max / 11 Pro Max series.</p>
+                        <p style="margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">File: 6.5_inch_[path].png</p>
                     </div>
                 </div>
             </div>
@@ -691,8 +691,8 @@
                     <div class="device-info">
                         <h4>Android Phone</h4>
                         <div class="resolution">1080 x 2400 pixels</div>
-                        <p>Rasio aspek modern 20:9 untuk Google Play Phone screenshots.</p>
-                        <p style="margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">Berkas: android_phone_[path].png</p>
+                        <p>Modern 20:9 aspect ratio for Google Play Phone screenshots.</p>
+                        <p style="margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">File: android_phone_[path].png</p>
                     </div>
                 </div>
 
@@ -704,17 +704,17 @@
                     <div class="device-info">
                         <h4>Android Tablet (10")</h4>
                         <div class="resolution">1600 x 2560 pixels</div>
-                        <p>Dimensi tablet standar untuk kebutuhan rilis Google Play Tablet.</p>
-                        <p style="margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">Berkas: android_tablet_[path].png</p>
+                        <p>Standard tablet dimensions for Google Play Tablet release requirements.</p>
+                        <p style="margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">File: android_tablet_[path].png</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Cara Instalasi -->
+        <!-- NPX Usage -->
         <section class="glass-card">
-            <h2>🚀 Cara Penggunaan Instan (NPX)</h2>
-            <p style="color: var(--text-muted); margin-bottom: 1rem;">Anda tidak perlu melakukan penyiapan manual. Cukup gunakan <code>npx</code> untuk menjalankan MobileSnap.</p>
+            <h2>🚀 Instant Usage (NPX)</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">You do not need any manual setup. Simply use <code>npx</code> to run MobileSnap instantly.</p>
             
             <div class="terminal">
                 <div class="terminal-header">
@@ -728,38 +728,38 @@
                 <div class="terminal-body">
                     <button class="btn-copy" onclick="copyText('setup-cmds')">Copy</button>
                     <pre id="setup-cmds" style="font-family: inherit;">
-<span class="terminal-comment"># 1. Jalankan instan menggunakan npx (ganti port sesuai server lokal Anda)</span>
+<span class="terminal-comment"># 1. Run instantly using npx (change port according to your local server)</span>
 <span class="terminal-prompt">PS></span>npx mobile-snap --url http://localhost:4321
 
-<span class="terminal-comment"># 2. Opsional: Unduh browser binaries jika Playwright belum dikonfigurasi di sistem</span>
+<span class="terminal-comment"># 2. Optional: Download browser binaries if Playwright is not yet configured in the system</span>
 <span class="terminal-prompt">PS></span>npx playwright install chromium</pre>
                 </div>
             </div>
         </section>
 
-        <!-- Interaktif Command Builder -->
+        <!-- Command Builder -->
         <section class="glass-card">
             <h2>⚡ CLI Command Builder (NPM / NPX)</h2>
-            <p style="color: var(--text-muted);">Gunakan builder interaktif ini untuk membuat dan menyalin perintah sesuai kebutuhan pengembangan Anda:</p>
+            <p style="color: var(--text-muted);">Use this interactive builder to generate and copy the command that fits your development needs:</p>
             
             <div class="builder-container">
                 <div class="grid-2">
                     <div class="form-group">
-                        <label for="input-url">URL Dev Server Lokal</label>
+                        <label for="input-url">Local Dev Server URL</label>
                         <input type="text" id="input-url" class="form-control" value="http://localhost:4321" oninput="updateCommand()">
                     </div>
                     <div class="form-group">
-                        <label for="input-paths">Rute / Paths (pisahkan koma)</label>
+                        <label for="input-paths">Routes / Paths (comma-separated)</label>
                         <input type="text" id="input-paths" class="form-control" value="/" oninput="updateCommand()">
                     </div>
                 </div>
                 <div class="grid-4">
                     <div class="form-group">
-                        <label for="input-platform">Platform Target</label>
+                        <label for="input-platform">Target Platform</label>
                         <select id="input-platform" class="form-control" onchange="updateCommand()">
                             <option value="ios">iOS (App Store)</option>
                             <option value="android">Android (Play Store)</option>
-                            <option value="both">Both (iOS & Android Sekaligus)</option>
+                            <option value="both">Both (iOS & Android Simultaneously)</option>
                         </select>
                     </div>
                     <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem;">
@@ -776,7 +776,7 @@
                     </div>
                 </div>
                 <div class="form-group" style="margin-top: 1rem;">
-                    <label for="input-output">Folder Output</label>
+                    <label for="input-output">Output Folder</label>
                     <input type="text" id="input-output" class="form-control" value="mobilesnap_output" oninput="updateCommand()">
                 </div>
 
@@ -787,121 +787,121 @@
             </div>
         </section>
 
-        <!-- Detail Opsi Parameter -->
+        <!-- Parameters Table -->
         <section class="glass-card">
-            <h2>⚙️ Parameter & Opsi CLI</h2>
+            <h2>⚙️ CLI Parameters & Options</h2>
             <table class="option-table">
                 <thead>
                     <tr>
-                        <th>Parameter</th>
+                        <th>Option</th>
                         <th>Alias</th>
-                        <th>Deskripsi</th>
-                        <th>Bawaan (Default)</th>
+                        <th>Description</th>
+                        <th>Default</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td><span class="param-tag">--url</span></td>
                         <td><span class="param-tag">-u</span></td>
-                        <td><strong>(Wajib)</strong> URL server lokal yang sedang berjalan (contoh: Astro).</td>
+                        <td><strong>(Required)</strong> URL of the local development server (e.g., Astro).</td>
                         <td>-</td>
                     </tr>
                     <tr>
                         <td><span class="param-tag">--paths</span></td>
                         <td><span class="param-tag">-p</span></td>
-                        <td>Daftar rute halaman yang dipisahkan dengan tanda koma.</td>
+                        <td>Comma-separated list of routes to capture.</td>
                         <td><code style="color: var(--secondary);">"/"</code></td>
                     </tr>
                     <tr>
                         <td><span class="param-tag">--platform</span></td>
                         <td><span class="param-tag">-l</span></td>
-                        <td>Platform yang ingin ditangkap: <code style="color: var(--secondary);">"ios"</code>, <code style="color: var(--secondary);">"android"</code>, atau <code style="color: var(--secondary);">"both"</code>.</td>
+                        <td>Target platform to capture: <code style="color: var(--secondary);">"ios"</code>, <code style="color: var(--secondary);">"android"</code>, or <code style="color: var(--secondary);">"both"</code>.</td>
                         <td><code style="color: var(--secondary);">"ios"</code></td>
                     </tr>
                     <tr>
                         <td><span class="param-tag">--output</span></td>
                         <td><span class="param-tag">-o</span></td>
-                        <td>Folder tujuan untuk menaruh berkas gambar hasil tangkapan.</td>
+                        <td>Destination directory to save the screenshot files.</td>
                         <td><code style="color: var(--secondary);">"mobilesnap_output"</code></td>
                     </tr>
                     <tr>
                         <td><span class="param-tag">--crawl</span></td>
                         <td><span class="param-tag">-c</span></td>
-                        <td>Menelusuri secara otomatis semua link internal dari halaman beranda.</td>
+                        <td>Automatically discover and screenshot all internal links starting from the home page.</td>
                         <td><code style="color: var(--secondary);">false</code></td>
                     </tr>
                     <tr>
                         <td><span class="param-tag">--detect-pages</span></td>
                         <td><span class="param-tag">-d</span></td>
-                        <td>Memindai direktori folder proyek lokal (Astro/Next.js) untuk rute statis.</td>
+                        <td>Scan the local project directories (Astro/Next.js) for static routes.</td>
                         <td><code style="color: var(--secondary);">false</code></td>
                     </tr>
                     <tr>
                         <td><span class="param-tag">--email</span></td>
                         <td>-</td>
-                        <td>Email / Username untuk autentikasi otomatis jika halaman memerlukan login.</td>
+                        <td>Email / Username for automatic authentication if the page requires login.</td>
                         <td>-</td>
                     </tr>
                     <tr>
                         <td><span class="param-tag">--password</span></td>
                         <td>-</td>
-                        <td>Password untuk autentikasi otomatis jika halaman memerlukan login (input disensor).</td>
+                        <td>Password for automatic authentication if the page requires login (masked input).</td>
                         <td>-</td>
                     </tr>
                     <tr>
                         <td><span class="param-tag">--login-path</span></td>
                         <td>-</td>
-                        <td>Jalur rute URL ke halaman login.</td>
+                        <td>URL route path to the login page.</td>
                         <td><code style="color: var(--secondary);">"/login.html"</code></td>
                     </tr>
                     <tr>
                         <td><span class="param-tag">--html</span></td>
                         <td>-</td>
-                        <td>Menambahkan ekstensi .html otomatis ke rute statis yang terdeteksi.</td>
+                        <td>Automatically append .html extension to detected static routes.</td>
                         <td><code style="color: var(--secondary);">false</code></td>
                     </tr>
                     <tr>
                         <td><span class="param-tag">--mockup</span></td>
                         <td><span class="param-tag">-m</span></td>
-                        <td>Membungkus tangkapan layar dalam bingkai mockup perangkat (iPhone/Android) dengan status bar dan bayangan transparan.</td>
+                        <td>Wrap screenshots in a beautiful device mockup frame (iPhone/Android) with status bars and transparent drop shadows.</td>
                         <td><code style="color: var(--secondary);">false</code></td>
                     </tr>
                 </tbody>
             </table>
         </section>
 
-        <!-- Penanganan Masalah & Ketahanan -->
+        <!-- Resilience and Special Features -->
         <section class="glass-card">
-            <h2>🛡️ Ketahanan Sistem & Fitur Khusus</h2>
+            <h2>🛡️ System Resilience & Special Features</h2>
             
             <div class="alert-box alert-warning">
                 <div class="alert-icon">💡</div>
                 <div class="alert-text">
-                    <h5>Skema Protokol URL & Auto-Normalisasi</h5>
-                    <p>MobileSnap secara otomatis mendeteksi jika URL tidak memiliki protokol (seperti <code>localhost:3000</code>) dan menambahkan <code>http://</code> secara dinamis.</p>
+                    <h5>URL Protocol & Auto-Normalization</h5>
+                    <p>MobileSnap automatically detects if the URL lacks a protocol prefix (e.g., <code>localhost:3000</code>) and prepends <code>http://</code> dynamically.</p>
                 </div>
             </div>
 
             <div class="alert-box alert-warning">
                 <div class="alert-icon">🌐</div>
                 <div class="alert-text">
-                    <h5>User-Agent Dinamis per Platform</h5>
-                    <p>Ketika platform Android berjalan, mesin otomatisasi mengemulasi Agen Pengguna Android 13 (Pixel 7). Sedangkan untuk platform iOS, digunakan Agen Pengguna iPhone. Ini menjamin server memberikan respon tampilan yang tepat sesuai target vendor.</p>
+                    <h5>Dynamic User-Agents per Platform</h5>
+                    <p>When capturing for Android, the system emulates Android 13 (Pixel 7) user-agent. For iOS, it emulates iPhone. This guarantees that your server serves the appropriate layout for each specific vendor.</p>
                 </div>
             </div>
             
             <div class="alert-box alert-warning">
                 <div class="alert-icon">📁</div>
                 <div class="alert-text">
-                    <h5>Skala Resolusi Retina (DPI 3x)</h5>
-                    <p>Semua screenshot ditangkap dengan pengaturan <code>deviceScaleFactor: 3</code> untuk menjaga kualitas output tetap tajam untuk standar unggahan store resmi.</p>
+                    <h5>Retina Resolution Scale (DPI 3x)</h5>
+                    <p>All screenshots are captured with <code>deviceScaleFactor: 3</code> to ensure the output remains ultra-sharp, complying with official store upload standards.</p>
                 </div>
             </div>
         </section>
     </div>
 
     <footer>
-        <p>&copy; 2026 MobileSnap CLI Tool. Dibuat dengan presisi visual untuk kebutuhan App Store & Play Store Anda.</p>
+        <p>&copy; 2026 MobileSnap CLI Tool. Crafted with visual precision for all your App Store & Play Store requirements.</p>
     </footer>
 
     <script>
@@ -942,9 +942,9 @@
             const textToCopy = isInner ? element.innerText : element.textContent;
             
             navigator.clipboard.writeText(textToCopy).then(() => {
-                alert('Teks berhasil disalin ke clipboard!');
+                alert('Command copied to clipboard successfully!');
             }).catch(err => {
-                console.error('Gagal menyalin teks: ', err);
+                console.error('Failed to copy text: ', err);
             });
         }
     </script>
